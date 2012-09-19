@@ -1,7 +1,7 @@
 import os
 import random
 
-from flask import Flask
+from flask import Flask, render_template
 
 
 app = Flask(__name__)
@@ -34,7 +34,8 @@ wordnet = WordNet('data')
 
 @app.route('/')
 def index():
-    return wordnet.random_slug()
+    slug = wordnet.random_slug()
+    return render_template('index.html', slug=slug)
 
 
 if __name__ == '__main__':
