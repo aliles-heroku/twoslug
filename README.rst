@@ -6,5 +6,5 @@ database. Implemented using the `Flask`_ web framework.
 
 .. _Flask: http://flask.pocoo.org
 .. _Heroku: https://heroku.com
-.. _TwoSlug: http://www.twoslug.me
+.. _TwoSlug: http://twoslug.aaroniles.net
 .. _WordNet: http://wordnet.princeton.edu
