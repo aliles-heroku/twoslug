@@ -10,4 +10,5 @@ from twoslug import wordnet
 def index():
     verb = random.choice(wordnet.get_verbs())
     noun = random.choice(wordnet.get_nouns())
-    return render_template('index.html', slug='{0} {1}'.format(verb, noun))
+    slug = '{0} {1}'.format(verb, noun)
+    return render_template('index.html', slug=slug, title='TwoSlug')

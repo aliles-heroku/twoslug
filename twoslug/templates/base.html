@@ -1,0 +1,65 @@
+<html lang="en">
+  <head>
+    <title>{{title}}</title>
+
+    <!-- meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- stylesheets -->
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css" type="text/css"/>
+    <link rel="stylesheet" href="/static/css/bootstrap-responsive.min.css"/>
+    <link rel="stylesheet" href="/static/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/static/css/pygments.css"/>
+    <style type="text/css">
+        html, body {
+            height: 100%;
+        }
+        .tall {
+            height: 100%;
+        }
+        .wide {
+            width: 100%;
+        }
+        form {
+            margin: 0 0 0 0;
+        }
+    </style>
+
+    <!-- javascript -->
+    <script src="/static/js/jquery-1.7.2.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+
+    <!-- child headers -->
+    {% block header %}{% endblock %}
+  </head>
+  <body>
+    <div class="navbar navbar-static-top">
+        <div class="navbar-inner">
+            <div class="container-fluid">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                <a class="brand" href="http://rst.aaroniles.net">{{title}}</a>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li class="divider-vertical"></li>
+                        {% block navlinks %}{% endblock %}
+                    </ul>
+                    <ul class="nav pull-right">
+                        <li>
+                            <a href="http://www.aaroniles.net/">
+                                <i class="icon-rss-sign icon-large"></i>
+                                Blog
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% block content %}{% endblock %}
+  </body>
+</html>
