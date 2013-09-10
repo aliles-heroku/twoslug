@@ -1,20 +1,50 @@
 <!-- extend from base layout -->
 {% extends "base.html" %}
 
+{% block header %}
+<style type="text/css">
+    .hero-unit {
+        margin-top: 41px;
+    }
+</style>
+
+<script>
+    $(document).ready(function() {
+        $("[data-toggle='popover']").popover()
+    })
+</script>
+{% endblock %}
+
 {% block content %}
 <div class="container">
-    <div class="page-header">
-        <h1>{{ slug }}</h1>
+    <div class="row">
+        <div class="span12">
+            <div class="page-header">
+                <h1>
+                    {% for word in words -%}
+                    {% if word[2]["Definition"] %}
+                    <a href="{{ word[2]["DefinitionURL"] }}" data-toggle="popover" data-placement="bottom" data-html="true" data-trigger="hover" data-title="{{ word[2]["DefinitionSource"] }}" data-content="{{ '<h6>'+word[2]["Definition"]+'</h6>'|e}}">{{ word[1] }}</a>
+                    {% elif word[2]["Abstract"] %}
+                    <a href="{{ word[2]["AbstractURL"] }}" data-toggle="popover" data-placement="bottom" data-html="true" data-trigger="hover" data-title="{{ word[2]["AbstractSource"] }}" data-content="{{'<h6>'+word[2]["Abstract"]+'</h6>'|e}}">{{ word[1] }}</a>
+                    {% else %}
+                    {{ word[1] }}
+                    {% endif %}
+                    {% endfor %}
+                </h1>
+            </div>
+        </div>
     </div>
-    <p>
-    On each request a different two word phrase, or slug line, is
-    generated.<br/>
-
-    The words are chosen randomly from the
-    <a href="http://wordnet.princeton.edu/">WordNet</a>
-    database.<br/>
-
-    Hosted by <a href="https://heroku.com">Heroku</a>.
-    </p>
+    <div class="row">
+        <div class="span12">
+            <p class="lead">
+            On each request a different two word phrase, or slug line, is
+            generated. The words are chosen randomly from Princeton
+            University's <a href="http://wordnet.princeton.edu/">WordNet</a>
+            database. Dictionary definitions are powered by
+            <a href="https://duckduckgo.com">DuckDuckGo</a>. Individual
+            definition sources are attributed inside definition popups.
+            </p>
+        </div>
+    </div>
 </div>
 {% endblock %}

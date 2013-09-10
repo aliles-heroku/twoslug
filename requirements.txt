@@ -7,4 +7,5 @@ distribute==0.6.34
 funcsigs==0.3
 gunicorn==18.0
 itsdangerous==0.23
+requests==1.2.3
 wsgiref==0.1.2

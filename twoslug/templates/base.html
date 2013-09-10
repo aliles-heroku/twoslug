@@ -42,7 +42,11 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </a>
+                {% if brand %}
+                <a class="brand" href="http://rst.aaroniles.net">{{brand}}</a>
+                {% else %}
                 <a class="brand" href="http://rst.aaroniles.net">{{title}}</a>
+                {% endif %}
                 <div class="nav-collapse">
                     <ul class="nav">
                         <li class="divider-vertical"></li>
