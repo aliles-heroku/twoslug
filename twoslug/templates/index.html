@@ -15,6 +15,10 @@
 </script>
 {% endblock %}
 
+{% block navlinks %}
+<li><a href="#about" data-toggle="modal">About</a></li>
+{% endblock %}
+
 {% block content %}
 <div class="container">
     <div class="row">
@@ -36,15 +40,72 @@
     </div>
     <div class="row">
         <div class="span12">
-            <p class="lead">
-            On each request a different two word phrase, or slug line, is
-            generated. The words are chosen randomly from Princeton
-            University's <a href="http://wordnet.princeton.edu/">WordNet</a>
-            database. Dictionary definitions are powered by
+            <p class="lead">For each request a different two word phrase, or
+            slug line, is generated. The words are chosen randomly from
+            Princeton University's
+            <a href="http://wordnet.princeton.edu/">WordNet</a> database.
+            Dictionary definitions are powered by
             <a href="https://duckduckgo.com">DuckDuckGo</a>. Individual
-            definition sources are attributed inside definition popups.
+            definition sources are attributed within definition popups.</p>
+
+            <p>TwoSlug also has an API for requesting your own random slug
+            lines. The API root is:</p>
+
+            <p><tt>http://twoslug.aaroniles.net/api</tt></p>
+
+            <p>Each path segment beyond the API root requests an additional
+            random word by word class. The following classes are supported.
             </p>
+
+            <ul>
+                <li><tt>verb</tt> for an English verb.</li>
+                <li><tt>noun</tt> for an English noun.</li>
+                <li><tt>adj</tt> for an English adjective.</li>
+                <li><tt>adv</tt> for an English adverb.</li>
+            </ul>
+
+            <p>Return values are JSON objects with a single key
+            <i>slugline</i>.  The <i>slugline</i> value is a list of objects
+            for each word in the slug line. These objects have two keys,
+            <i>class</i> and <i>word</i> for the word class and chosen word
+            respectively.</p>
+
+<pre>{
+  "slugline": [
+    {
+      "class": "verb",
+      "word": "rebuild"
+    },
+    {
+      "class": "noun",
+      "word": "stearin"
+    }
+  ]
+}</pre>
+
+            <p>The sluglines generated for the main page are a verb followed by a
+            noun. This is equivalent to requesting
+            <tt>http://twoslug.aaroniles.net/api/verb/noun</tt></p>
         </div>
+    </div>
+</div>
+
+<div id="about" class="modal hide fade" tabindex="-1" role="dialog" aria-labelled by="modalLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+        <h3 id="modalLabel">About TwoSlug</h3>
+    </div>
+    <div class="modal-body">
+        <p class="lead">Created by
+        <a href="http://www.aaroniles.net">Aaron Iles</a> in
+        <a href="http://python.org">Python</a>. Implemented with
+        <a href="http://flask.pocoo.org/">Flask</a>,
+        <a href="http://jinja.pocoo.org/">Jinja</a> and
+        <a href="http://docs.python-requests.org/">Requests</a>.
+        Hosted by <a href="https://heroku.com">Heroku</a>.</p>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
     </div>
 </div>
 {% endblock %}
