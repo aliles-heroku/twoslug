@@ -45,7 +45,7 @@ def api(path):
 @app.route('/feeds/atom.xml')
 def atom():
     now = datetime.datetime.utcnow()
-    today = datetime.datetime(now.year, now.month, now.day, now.hour // 12)
+    today = datetime.datetime(now.year, now.month, now.day, 12 * (now.hour // 12))
     link = url_for('slugline', year=today.year, month=today.month,
             day=today.day, hour=today.hour, _external=True)
     seed = calendar.timegm(today.timetuple())
