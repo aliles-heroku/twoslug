@@ -2,18 +2,14 @@ import calendar
 import datetime
 import random
 
-from flask import abort, jsonify, render_template, request
+from flask import abort, jsonify, render_template, request, url_for
 from werkzeug.contrib.atom import AtomFeed
 
 from twoslug import app
 from twoslug import wordnet
 from twoslug import duckduckgo
 
-
-@app.route('/')
-def index():
-    verb = random.choice(wordnet.get_verbs())
-    noun = random.choice(wordnet.get_nouns())
+def page(verb, noun):
     words = [
             ('verb', verb, duckduckgo.define(verb)),
             ('noun', noun, duckduckgo.define(noun))
@@ -24,6 +20,13 @@ def index():
             slug=slugline,
             title=slugline,
             words=words)
+
+
+@app.route('/')
+def index():
+    verb = random.choice(wordnet.get_verbs())
+    noun = random.choice(wordnet.get_nouns())
+    return page(verb, noun)
 
 @app.route('/api/<path:path>/')
 def api(path):
@@ -52,6 +55,16 @@ def atom():
     feed.add(title=slugline, title_type='text',
             content=slugline, content_type='text',
             published=today, updated=today,
-            id=today.strftime('urn:date:%Y-%m-%d'),
-            author='TwoSlug')
+            author='TwoSlug',
+            id=url_for('slugline', year=today.year, month=today.month,
+                day=today.day, hour=today.hour, _external=True))
     return feed.get_response()
+
+@app.route('/slugline/<int:year>/<int:month>/<int:day>/<int:hour>')
+def slugline(year, month, day, hour):
+    today = datetime.datetime(year, month, day, hour)
+    seed = calendar.timegm(today.timetuple())
+    chooser = random.Random(seed)
+    verb = chooser.choice(wordnet.get_verbs())
+    noun = chooser.choice(wordnet.get_nouns())
+    return page(verb, noun)
