@@ -46,6 +46,8 @@ def api(path):
 def atom():
     now = datetime.datetime.utcnow()
     today = datetime.datetime(now.year, now.month, now.day, now.hour // 12)
+    link = url_for('slugline', year=today.year, month=today.month,
+            day=today.day, hour=today.hour, _external=True)
     seed = calendar.timegm(today.timetuple())
     chooser = random.Random(seed)
     verb = chooser.choice(wordnet.get_verbs()).capitalize()
@@ -55,9 +57,8 @@ def atom():
     feed.add(title=slugline, title_type='text',
             content=slugline, content_type='text',
             published=today, updated=today,
-            author='TwoSlug',
-            id=url_for('slugline', year=today.year, month=today.month,
-                day=today.day, hour=today.hour, _external=True))
+            id=link, url=link,
+            author='TwoSlug')
     return feed.get_response()
 
 @app.route('/slugline/<int:year>/<int:month>/<int:day>/<int:hour>')
