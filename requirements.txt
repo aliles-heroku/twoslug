@@ -2,7 +2,7 @@ Flask==0.10.1
 Jinja2==2.7.1
 MarkupSafe==0.18
 Werkzeug==0.9.4
-begins==0.6
+begins==0.7
 distribute==0.6.34
 funcsigs==0.3
 gunicorn==18.0
