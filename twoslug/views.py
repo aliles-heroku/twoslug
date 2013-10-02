@@ -1,6 +1,9 @@
+import calendar
+import datetime
 import random
 
-from flask import abort, jsonify, render_template
+from flask import abort, jsonify, render_template, request
+from werkzeug.contrib.atom import AtomFeed
 
 from twoslug import app
 from twoslug import wordnet
@@ -35,3 +38,20 @@ def api(path):
         except IOError:
             abort(400)
     return jsonify(slugline=words)
+
+@app.route('/feeds/atom.xml')
+def atom():
+    now = datetime.datetime.utcnow()
+    today = datetime.datetime(now.year, now.month, now.day, now.hour // 12)
+    seed = calendar.timegm(today.timetuple())
+    chooser = random.Random(seed)
+    verb = chooser.choice(wordnet.get_verbs()).capitalize()
+    noun = chooser.choice(wordnet.get_nouns()).capitalize()
+    slugline = '{0} {1}'.format(verb, noun)
+    feed = AtomFeed('TwoSlug Today', feed_url=request.url, url=request.url_root)
+    feed.add(title=slugline, title_type='text',
+            content=slugline, content_type='text',
+            published=today, updated=today,
+            id=today.strftime('urn:date:%Y-%m-%d'),
+            author='TwoSlug')
+    return feed.get_response()

@@ -20,7 +20,7 @@ def load_words(category):
 def get_words(category):
     words = getattr(g, '_' + category, None)
     if words is None:
-        words = tuple(load_words(category))
+        words = tuple(sorted(load_words(category)))
         setattr(g, '_' + category, words)
     return words
 
