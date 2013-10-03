@@ -2,7 +2,7 @@ import calendar
 import datetime
 import random
 
-from flask import abort, jsonify, render_template, request, url_for
+from flask import abort, jsonify, redirect, render_template, request, url_for
 from werkzeug.contrib.atom import AtomFeed
 
 from twoslug import app
@@ -56,9 +56,8 @@ def api(path):
 def atom():
     now = datetime.datetime.utcnow()
     today = datetime.datetime(now.year, now.month, now.day, 12 * (now.hour // 12))
-    link = url_for('slugline', year=today.year, month=today.month,
-            day=today.day, hour=today.hour, _external=True)
     seed = calendar.timegm(today.timetuple())
+    link = url_for('slugline', seed=seed, _external=True)
     chooser = random.Random(seed)
     verb = chooser.choice(wordnet.get_verbs()).capitalize()
     noun = chooser.choice(wordnet.get_nouns()).capitalize()
@@ -71,11 +70,15 @@ def atom():
             author='TwoSlug')
     return feed.get_response()
 
-@app.route('/slugline/<int:year>/<int:month>/<int:day>/<int:hour>')
-def slugline(year, month, day, hour):
-    today = datetime.datetime(year, month, day, hour)
-    seed = calendar.timegm(today.timetuple())
+@app.route('/slugline/<int:seed>')
+def slugline(seed):
     chooser = random.Random(seed)
     verb = chooser.choice(wordnet.get_verbs())
     noun = chooser.choice(wordnet.get_nouns())
     return page(verb, noun)
+
+@app.route('/slugline/<int:year>/<int:month>/<int:day>/<int:hour>')
+def date(year, month, day, hour):
+    today = datetime.datetime(year, month, day, hour)
+    seed = calendar.timegm(today.timetuple())
+    return redirect(url_for('slugline', seed=seed))
