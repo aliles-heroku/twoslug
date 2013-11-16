@@ -25,18 +25,28 @@ def page(verb, noun):
 @app.route('/')
 def index():
     verb = random.choice(wordnet.get_verbs())
-    noun = random.choice(wordnet.get_nouns())
+    mode = request.args.get('mode', None)
+    if mode == 'alliteration':
+      filter_fn = lambda item: item.startswith(verb[0])
+    else:
+      filter_fn = None
+    noun = random.choice(filter(filter_fn, wordnet.get_nouns()))
     return page(verb, noun)
 
 @app.route('/api/<path:path>/')
 def api(path):
     words = []
+    mode = request.args.get('mode', None)
+    filter_fn = None
     for category in path.split('/'):
         try:
             word = {
                     'class': category,
-                    'word': random.choice(wordnet.get_words(category))
+                    'word': random.choice(filter(filter_fn, wordnet.get_words(category)))
             }
+            if mode == 'alliteration' and filter_fn is None:
+                filter_char = word['word'][0]
+                filter_fn = lambda item: item.startswith(filter_char)
             words.append(word)
         except IOError:
             abort(400)
