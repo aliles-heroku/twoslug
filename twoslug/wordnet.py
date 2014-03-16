@@ -1,5 +1,6 @@
 from functools import partial
 import os
+import random
 
 from flask import g
 
@@ -17,14 +18,14 @@ def load_words(category):
             words.add(word)
     return words
 
-def get_words(category):
+def get_word(category, filter_fn=None, chooser=random):
     words = getattr(g, '_' + category, None)
     if words is None:
         words = tuple(sorted(load_words(category)))
         setattr(g, '_' + category, words)
-    return words
+    return chooser.choice(filter(filter_fn, words))
 
-get_verbs = partial(get_words, 'verb')
-get_nouns = partial(get_words, 'noun')
-get_adjectives = partial(get_words, 'adj')
-get_adverbs = partial(get_words, 'adv')
+get_verb = partial(get_word, 'verb')
+get_noun = partial(get_word, 'noun')
+get_adjective = partial(get_word, 'adj')
+get_adverb = partial(get_word, 'adv')

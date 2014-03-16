@@ -24,13 +24,13 @@ def page(verb, noun):
 
 @app.route('/')
 def index():
-    verb = random.choice(wordnet.get_verbs())
+    verb = wordnet.get_verb()
     mode = request.args.get('mode', None)
     if mode == 'alliteration':
       filter_fn = lambda item: item.startswith(verb[0])
     else:
       filter_fn = None
-    noun = random.choice(filter(filter_fn, wordnet.get_nouns()))
+    noun = wordnet.get_noun(filter_fn)
     return page(verb, noun)
 
 @app.route('/api/<path:path>/')
@@ -42,7 +42,7 @@ def api(path):
         try:
             word = {
                     'class': category,
-                    'word': random.choice(filter(filter_fn, wordnet.get_words(category)))
+                    'word': wordnet.get_word(category, filter_fn)
             }
             if mode == 'alliteration' and filter_fn is None:
                 filter_char = word['word'][0]
@@ -59,8 +59,8 @@ def atom():
     seed = calendar.timegm(today.timetuple())
     link = url_for('slugline', seed=seed, _external=True)
     chooser = random.Random(seed)
-    verb = chooser.choice(wordnet.get_verbs()).capitalize()
-    noun = chooser.choice(wordnet.get_nouns()).capitalize()
+    verb = wordnet.get_verb(chooser=chooser).capitalize()
+    noun = wordnet.get_noun(chooser=chooser).capitalize()
     slugline = '{0} {1}'.format(verb, noun)
     feed = AtomFeed('TwoSlug Today', feed_url=request.url, url=request.url_root)
     feed.add(title=slugline, title_type='text',
@@ -73,8 +73,8 @@ def atom():
 @app.route('/slugline/<int:seed>')
 def slugline(seed):
     chooser = random.Random(seed)
-    verb = chooser.choice(wordnet.get_verbs())
-    noun = chooser.choice(wordnet.get_nouns())
+    verb = wordnet.get_verb(chooser=chooser)
+    noun = wordnet.get_noun(chooser=chooser)
     return page(verb, noun)
 
 @app.route('/slugline/<int:year>/<int:month>/<int:day>/<int:hour>')
