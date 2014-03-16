@@ -23,7 +23,7 @@ def page(verb, noun):
             words=words)
 
 
-@app.route('/')
+@app.route('/', subdomain='twoslug')
 def index():
     verb = wordnet.get_verb()
     mode = request.args.get('mode', None)
@@ -34,7 +34,7 @@ def index():
     noun = wordnet.get_noun(filter_fn)
     return page(verb, noun)
 
-@app.route('/api/<path:path>/')
+@app.route('/api/<path:path>/', subdomain='twoslug')
 def api(path):
     words = []
     mode = request.args.get('mode', None)
@@ -53,7 +53,7 @@ def api(path):
             abort(400)
     return jsonify(slugline=words)
 
-@app.route('/feeds/atom.xml')
+@app.route('/feeds/atom.xml', subdomain='twoslug')
 def atom():
     now = datetime.datetime.utcnow()
     today = datetime.datetime(now.year, now.month, now.day, 12 * (now.hour // 12))
@@ -71,14 +71,14 @@ def atom():
             author='TwoSlug')
     return feed.get_response()
 
-@app.route('/slugline/<int:seed>')
+@app.route('/slugline/<int:seed>', subdomain='twoslug')
 def slugline(seed):
     chooser = random.Random(seed)
     verb = wordnet.get_verb(chooser=chooser)
     noun = wordnet.get_noun(chooser=chooser)
     return page(verb, noun)
 
-@app.route('/slugline/<int:year>/<int:month>/<int:day>/<int:hour>')
+@app.route('/slugline/<int:year>/<int:month>/<int:day>/<int:hour>', subdomain='twoslug')
 def date(year, month, day, hour):
     today = datetime.datetime(year, month, day, hour)
     seed = calendar.timegm(today.timetuple())
