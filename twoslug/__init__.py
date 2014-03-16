@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from flask import Flask, render_template
 
 app = Flask(__name__)

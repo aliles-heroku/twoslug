@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import calendar
 import datetime
 import random
@@ -6,8 +7,8 @@ from flask import abort, jsonify, redirect, render_template, request, url_for
 from werkzeug.contrib.atom import AtomFeed
 
 from twoslug import app
-from twoslug import wordnet
 from twoslug import duckduckgo
+from twoslug.model import wordnet
 
 def page(verb, noun):
     words = [

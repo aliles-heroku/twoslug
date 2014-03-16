@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from functools import partial
 import os
 import random
@@ -5,7 +6,6 @@ import random
 from flask import g
 
 from twoslug import app
-
 
 def load_words(category):
     words = set()
