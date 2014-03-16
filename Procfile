@@ -1,1 +1,1 @@
-web: gunicorn twoslug:app -b 0.0.0.0:$PORT -w 3
+web: waitress-serve --port=$PORT twoslug:app
