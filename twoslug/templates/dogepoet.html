@@ -1,0 +1,105 @@
+<!-- extend from base layout -->
+{% extends "base.html" %}
+
+{% block header %}
+<style type="text/css">
+    .hero-unit {
+        margin-top: 41px;
+    }
+
+    h1 {
+        font-family: "Comic Sans MS", cursive, sans-serif;
+        text-align: center;
+    }
+</style>
+{% endblock %}
+
+{% block navlinks %}
+<li><a href="http://twoslug.aaroniles.net">TwoSlug</a></li>
+<li><a href="#about" data-toggle="modal">About</a></li>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="span12">
+            <div class="page-header">
+                {% for section in poem %}
+                <h1>{{section[1]}}</h1>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="span12">
+            <p class="lead">For each request a different, random, doge poem is
+            generated. The words are chosen randomly from Princeton
+            University's <a href="http://wordnet.princeton.edu/">WordNet</a>
+            database.
+
+            <p>A url parameter of <tt>?mode=alliteration</tt> will make
+            DogePoet generate poems that contain words starting with the same
+            character.</p>
+
+            <p>DogePoet also has an API for requesting your own random poetry.
+            The API root is:</p>
+
+            <p><tt>http://dogepoet.aaroniles.net/api</tt></p>
+
+            <p>Each path segment beyond the API root requests an additional
+            random line by song element. The following elements are supported.
+            </p>
+
+            <ul>
+                <li><tt>verse</tt> for two word verse.</li>
+                <li><tt>finale</tt> for a one word finale.</li>
+            </ul>
+
+            <p>Return values are JSON objects with a single key
+            <i>poem</i>.  The <i>poem</i> value is a list of objects
+            for each line in the poem. These objects have two keys,
+            <i>element</i> and <i>line</i> for the sone element and chosen
+            line respectively.</p>
+
+<pre>{
+  "poem": [
+    {
+      "element": "verse", 
+      "line": "such mimic"
+    }, 
+    {
+      "element": "verse", 
+      "line": "much generational"
+    }, 
+    {
+      "element": "finale", 
+      "line": "excite"
+    }
+  ]
+}</pre>
+
+            <p>The poems generated for the main page are two verses followed
+            by a finale. This is equivalent to requesting
+            <tt>http://dogepoet.aaroniles.net/api/verse/verse/finale</tt></p>
+        </div>
+    </div>
+</div>
+
+<div id="about" class="modal hide fade" tabindex="-1" role="dialog" aria-labelled by="modalLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+        <h3 id="modalLabel">About DogePoet</h3>
+    </div>
+    <div class="modal-body">
+        <p class="lead">Created by
+        <a href="http://www.aaroniles.net">Aaron Iles</a> in
+        <a href="http://python.org">Python</a>. Implemented with
+        <a href="http://flask.pocoo.org/">Flask</a>,
+        <a href="http://jinja.pocoo.org/">Jinja</a> and
+        Hosted by <a href="https://heroku.com">Heroku</a>.</p>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+    </div>
+</div>
+{% endblock %}
