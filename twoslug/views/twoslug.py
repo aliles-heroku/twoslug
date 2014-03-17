@@ -10,7 +10,7 @@ from twoslug import app
 from twoslug import duckduckgo
 from twoslug.model import wordnet
 
-def page(verb, noun):
+def twoslug_page(verb, noun):
     words = [
             ('verb', verb, duckduckgo.define(verb)),
             ('noun', noun, duckduckgo.define(noun))
@@ -24,7 +24,7 @@ def page(verb, noun):
 
 
 @app.route('/', subdomain='twoslug')
-def index():
+def twoslug_index():
     verb = wordnet.get_verb()
     mode = request.args.get('mode', None)
     if mode == 'alliteration':
@@ -32,10 +32,10 @@ def index():
     else:
       filter_fn = None
     noun = wordnet.get_noun(filter_fn)
-    return page(verb, noun)
+    return twoslug_page(verb, noun)
 
 @app.route('/api/<path:path>/', subdomain='twoslug')
-def api(path):
+def twoslug_api(path):
     words = []
     mode = request.args.get('mode', None)
     filter_fn = None
@@ -54,11 +54,11 @@ def api(path):
     return jsonify(slugline=words)
 
 @app.route('/feeds/atom.xml', subdomain='twoslug')
-def atom():
+def twoslug_atom():
     now = datetime.datetime.utcnow()
     today = datetime.datetime(now.year, now.month, now.day, 12 * (now.hour // 12))
     seed = calendar.timegm(today.timetuple())
-    link = url_for('slugline', seed=seed, _external=True)
+    link = url_for('twoslug_slugline', seed=seed, _external=True)
     chooser = random.Random(seed)
     verb = wordnet.get_verb(chooser=chooser).capitalize()
     noun = wordnet.get_noun(chooser=chooser).capitalize()
@@ -72,14 +72,14 @@ def atom():
     return feed.get_response()
 
 @app.route('/slugline/<int:seed>', subdomain='twoslug')
-def slugline(seed):
+def twoslug_slugline(seed):
     chooser = random.Random(seed)
     verb = wordnet.get_verb(chooser=chooser)
     noun = wordnet.get_noun(chooser=chooser)
-    return page(verb, noun)
+    return twoslug_page(verb, noun)
 
 @app.route('/slugline/<int:year>/<int:month>/<int:day>/<int:hour>', subdomain='twoslug')
-def date(year, month, day, hour):
+def twoslug_date(year, month, day, hour):
     today = datetime.datetime(year, month, day, hour)
     seed = calendar.timegm(today.timetuple())
-    return redirect(url_for('slugline', seed=seed))
+    return redirect(url_for('twoslug_slugline', seed=seed))
