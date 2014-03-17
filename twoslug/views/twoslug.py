@@ -16,7 +16,7 @@ def page(verb, noun):
             ('noun', noun, duckduckgo.define(noun))
     ]
     slugline = '{0} {1}'.format(verb, noun)
-    return render_template('index.html',
+    return render_template('twoslug.html',
             brand='TwoSlug',
             slug=slugline,
             title=slugline,
