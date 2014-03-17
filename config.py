@@ -1,2 +1,2 @@
-# SERVER_NAME = 'aaroniles.net'
+SERVER_NAME = 'aaroniles.net'
 WORDNET = './data'
