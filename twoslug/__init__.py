@@ -11,4 +11,4 @@ app.add_url_rule('/static/<path:filename>',
         endpoint='static', subdomain='<subdomain>',
         view_func=send_static_file)
 
-from twoslug import views
+from . import views
