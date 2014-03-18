@@ -15,7 +15,7 @@ def doge_page(first, second, last):
             ('verse', ' '.join(second)),
             ('finale', last[0])
     ]
-    poetry = '{0}\n{1}\n{2}'.format(first, second, last)
+    poetry = '{0}\n{1}\n{2}'.format(*(p[-1] for p in poem))
     return render_template('dogepoet.html',
             brand='DogePoet',
             slug=poetry,
