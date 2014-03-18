@@ -61,7 +61,7 @@ def doge_api(path):
 @app.route('/feeds/atom.xml', subdomain='dogepoet')
 def doge_atom():
     now = datetime.datetime.utcnow()
-    today = datetime.datetime(now.year, now.month, now.day, 12 * (now.hour // 12))
+    today = datetime.datetime(now.year, now.month, now.day, 12 * (now.hour // 12) + 6)
     seed = calendar.timegm(today.timetuple())
     link = url_for('doge_poem', seed=seed, _external=True)
     chooser = random.Random(seed)
