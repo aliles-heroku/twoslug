@@ -11,9 +11,9 @@ from twoslug.model import doge
 
 def doge_page(first, second, last):
     poem = [
-            ('verse', first),
-            ('verse', second),
-            ('finale', last)
+            ('verse', ' '.join(first)),
+            ('verse', ' '.join(second)),
+            ('finale', last[0])
     ]
     poetry = '{0}\n{1}\n{2}'.format(first, second, last)
     return render_template('dogepoet.html',
@@ -24,13 +24,14 @@ def doge_page(first, second, last):
 
 @app.route('/', subdomain='dogepoet')
 def doge_index():
+    first = doge.get_verse()
     mode = request.args.get('mode', None)
     if mode == 'alliteration':
-      filter_fn = lambda item: item.startswith(verb[0])
+      filter_reference = lambda item: item.startswith(first[1][0])
     else:
-      filter_fn = None
-    first = doge.get_verse()
-    second = doge.get_verse(filter_fn)
+      filter_reference = None
+    filter_delimeter = lambda item: item != first[0]
+    second = doge.get_verse(filter_reference, filter_delimeter)
     last = doge.get_finale()
     return doge_page(first, second, last)
 
@@ -38,17 +39,21 @@ def doge_index():
 def doge_api(path):
     poem = []
     mode = request.args.get('mode', None)
-    filter_fn = None
+    filter_reference = None
+    filter_delimeter = None
     for element in path.split('/'):
         try:
+            words = doge.get_doge(element, filter_reference, filter_delimeter)
             verse = {
                     'element': element,
-                    'line': doge.get_doge(element, filter_fn)
+                    'line': ' '.join(words)
             }
             poem.append(verse)
-            if mode == 'alliteration' and filter_fn is None:
+            if mode == 'alliteration' and filter_reference is None:
                 filter_char = verse['line'].split()[-1][0]
-                filter_fn = lambda item: item.startswith(filter_char)
+                filter_reference = lambda item: item.startswith(filter_char)
+            if element == 'verse':
+                filter_delimeter = lambda item: item != words[0]
         except ValueError:
             abort(400)
     return jsonify(poem=poem)
@@ -61,9 +66,10 @@ def doge_atom():
     link = url_for('doge_poem', seed=seed, _external=True)
     chooser = random.Random(seed)
     first = doge.get_verse(chooser=chooser)
-    second = doge.get_verse(chooser=chooser)
+    filter_delimeter = lambda item: item != first[0]
+    second = doge.get_verse(filter_delimeter=filter_delimeter, chooser=chooser)
     last = doge.get_finale(chooser=chooser)
-    poetry = '{0}\n{1}\n{2}'.format(first, second, last)
+    poetry = '{0}\n{1}\n{2}'.format(' '.join(first), ' '.join(second), last[0])
     feed = AtomFeed('DogPoet Poetry', feed_url=request.url, url=request.url_root)
     feed.add(title=poetry, title_type='text',
             content=poetry, content_type='text',
@@ -76,7 +82,8 @@ def doge_atom():
 def doge_poem(seed):
     chooser = random.Random(seed)
     first = doge.get_verse(chooser=chooser)
-    second = doge.get_verse(chooser=chooser)
+    filter_delimeter = lambda item: item != first[0]
+    second = doge.get_verse(filter_delimeter=filter_delimeter, chooser=chooser)
     last = doge.get_finale(chooser=chooser)
     return doge_page(first, second, last)
 

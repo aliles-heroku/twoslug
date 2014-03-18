@@ -8,18 +8,18 @@ from . import wordnet
 VERSE = sorted(('many', 'much', 'so', 'such', 'very'))
 FINALE = sorted(('amaze', 'excite', 'wow', 'wow', 'wow'))
 
-def get_verse(filter_fn=None, chooser=random):
+def get_verse(filter_reference=None, filter_delimeter=None, chooser=random):
     words = getattr(g, '_doge', None)
     category = chooser.choice(('adj', 'noun', 'verb'))
-    return " ".join((chooser.choice(VERSE),
-        wordnet.get_word(category, filter_fn, chooser)))
+    return (chooser.choice(filter(filter_delimeter, VERSE)),
+        wordnet.get_word(category, filter_reference, chooser))
 
 def get_finale(chooser=random):
-    return chooser.choice(FINALE)
+    return (chooser.choice(FINALE),)
 
-def get_doge(element, filter_fn=None, chooser=random):
+def get_doge(element, filter_reference=None, filter_delimeter=None, chooser=random):
     if element == 'verse':
-        return get_verse(filter_fn, chooser)
+        return get_verse(filter_reference, filter_delimeter, chooser)
     elif element == 'finale':
         return get_finale(chooser)
     else:
