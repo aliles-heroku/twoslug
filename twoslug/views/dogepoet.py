@@ -69,7 +69,7 @@ def doge_atom():
     filter_delimeter = lambda item: item != first[0]
     second = doge.get_verse(filter_delimeter=filter_delimeter, chooser=chooser)
     last = doge.get_finale(chooser=chooser)
-    poetry = '{0}\n{1}\n{2}'.format(' '.join(first), ' '.join(second), last[0])
+    poetry = '{0}\n{1}\n{2}\n'.format(' '.join(first), ' '.join(second), last[0])
     feed = AtomFeed('DogPoet Poetry', feed_url=request.url, url=request.url_root)
     feed.add(title=poetry, title_type='text',
             content=poetry, content_type='text',
