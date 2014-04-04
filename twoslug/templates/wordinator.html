@@ -1,0 +1,104 @@
+<!-- extend from base layout -->
+{% extends "base.html" %}
+
+{% block header %}
+<link href='http://fonts.googleapis.com/css?family=Source+Code+Pro:700' rel='stylesheet' type='text/css'>
+
+<style type="text/css">
+    .hero-unit {
+        margin-top: 41px;
+    }
+
+    h1 {
+        font-family: 'Source Code Pro', 'Comic Sans', 'Comic Sans MS', 'Chalkboard', 'ChalkboardSE-Regular', 'Marker Felt', 'Purisa', 'URW Chancery L', cursive;
+        font-size: 450%;
+        text-align: center;
+    }
+</style>
+{% endblock %}
+
+{% block navlinks %}
+<li><a href="{{ url_for('doge_index', _external=True) }}">DogePoet</a></li>
+<li><a href="{{ url_for('twoslug_index', _external=True) }}">TwoSlug</a></li>
+<li><a href="#about" data-toggle="modal">About</a></li>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="span12">
+            <div class="page-header">
+                <h1>{{wordoid}}</h1>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="span12">
+            <p class="lead">For each request a different, random,
+            <a href="https://en.wiktionary.org/wiki/wordoid">wordoid</a> is
+            generated. The wordoids are generated from a
+            <a href="https://en.wikipedia.org/wiki/Markov_chain">Markov chain</a>
+            of <a href="https://en.wikipedia.org/wiki/N-gram">trigrams</a>
+            of English word character sequences from Princeton University's
+            <a href="http://wordnet.princeton.edu/">WordNet</a> database.
+
+            <p>A url parameter of <tt>?length=N</tt> will make Wordinator
+            generate wordoids of exantly N characters. Otherwise it chooses a
+            random length between 5 and 10, inclusive.</p>
+
+            <p>Wordinator also has an API for requesting random wordoids. The
+            API root is:</p>
+
+            <p><tt>{{ url_for('wordinator_api', path='', _external=True)[:-1] }}</tt></p>
+
+            <p>Each path segment beyond the API root requests an additional
+            random wordoid by word class The following elements are supported.
+            </p>
+
+            <ul>
+                <li><tt>verb</tt> for an English verb.</li>
+                <li><tt>noun</tt> for an English noun.</li>
+                <li><tt>adj</tt> for an English adjective.</li>
+                <li><tt>adv</tt> for an English adverb.</li>
+            </ul>
+
+            <p>Return values are JSON objects with a single key
+            <i>wordoids</i>. The <i>wordoids</i> value is a list of objects
+            for each wordoid generated. These objects have two keys,
+            <i>class</i> and <i>wordoid</i> for the word class and wordoid
+            respectively.</p>
+
+<pre>{
+  "wordoids": [
+    {
+      "class": "noun",
+      "wordoid": "hyperanc"
+    }
+  ]
+}</pre>
+
+            <p>The wordoids generated for the main page are derived from
+            English nouns. This is equivalent to requesting.
+            <tt>{{ url_for('wordinator_api', path='noun', _external=True)[:-1] }}</tt></p>
+        </div>
+    </div>
+</div>
+
+<div id="about" class="modal hide fade" tabindex="-1" role="dialog" aria-labelled by="modalLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+        <h3 id="modalLabel">About Wordinator</h3>
+    </div>
+    <div class="modal-body">
+        <p class="lead">Created by
+        <a href="http://www.aaroniles.net">Aaron Iles</a> in
+        <a href="http://python.org">Python</a>. Implemented with
+        <a href="http://flask.pocoo.org/">Flask</a>,
+        <a href="http://jinja.pocoo.org/">Jinja</a> and
+        Hosted by <a href="https://heroku.com">Heroku</a>.</p>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+    </div>
+</div>
+{% endblock %}
