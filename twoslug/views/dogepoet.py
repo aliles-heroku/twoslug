@@ -79,6 +79,7 @@ def doge_atom():
     return feed.get_response()
 
 @app.route('/slugline/<int:seed>', subdomain='dogepoet')
+@app.route('/poem/<int:seed>', subdomain='dogepoet')
 def doge_poem(seed):
     chooser = random.Random(seed)
     first = doge.get_verse(chooser=chooser)
@@ -88,6 +89,7 @@ def doge_poem(seed):
     return doge_page(first, second, last)
 
 @app.route('/slugline/<int:year>/<int:month>/<int:day>/<int:hour>', subdomain='dogepoet')
+@app.route('/poem/<int:year>/<int:month>/<int:day>/<int:hour>', subdomain='dogepoet')
 def doge_date(year, month, day, hour):
     today = datetime.datetime(year, month, day, hour)
     seed = calendar.timegm(today.timetuple())
