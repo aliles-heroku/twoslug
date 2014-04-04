@@ -15,7 +15,8 @@
 {% endblock %}
 
 {% block navlinks %}
-<li><a href="http://twoslug.aaroniles.net">TwoSlug</a></li>
+<li><a href="{{ url_for('twoslug_index', _external=True) }}">TwoSlug</a></li>
+<li><a href="{{ url_for('wordinator_index', _external=True) }}">Wordinator</a></li>
 <li><a href="#about" data-toggle="modal">About</a></li>
 {% endblock %}
 
@@ -44,7 +45,7 @@
             <p>DogePoet also has an API for requesting your own random poetry.
             The API root is:</p>
 
-            <p><tt>http://dogepoet.aaroniles.net/api</tt></p>
+            <p><tt>{{ url_for('doge_api', path='', _external=True)[:-1] }}</tt></p>
 
             <p>Each path segment beyond the API root requests an additional
             random line by song element. The following elements are supported.
@@ -56,7 +57,7 @@
             </ul>
 
             <p>Return values are JSON objects with a single key
-            <i>poem</i>.  The <i>poem</i> value is a list of objects
+            <i>poem</i>. The <i>poem</i> value is a list of objects
             for each line in the poem. These objects have two keys,
             <i>element</i> and <i>line</i> for the sone element and chosen
             line respectively.</p>
@@ -80,7 +81,7 @@
 
             <p>The poems generated for the main page are two verses followed
             by a finale. This is equivalent to requesting
-            <tt>http://dogepoet.aaroniles.net/api/verse/verse/finale</tt></p>
+            <tt>{{ url_for('doge_api', path='verse/verse/finale', _external=True)[:-1] }}</tt></p>
         </div>
     </div>
 </div>

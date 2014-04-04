@@ -16,7 +16,8 @@
 {% endblock %}
 
 {% block navlinks %}
-<li><a href="http://dogepoet.aaroniles.net">DogePoet</a></li>
+<li><a href="{{ url_for('doge_index', _external=True) }}">DogePoet</a></li>
+<li><a href="{{ url_for('wordinator_index', _external=True) }}">Wordinator</a></li>
 <li><a href="#about" data-toggle="modal">About</a></li>
 {% endblock %}
 
@@ -55,7 +56,7 @@
             <p>TwoSlug also has an API for requesting your own random slug
             lines. The API root is:</p>
 
-            <p><tt>http://twoslug.aaroniles.net/api</tt></p>
+            <p><tt>{{ url_for('twoslug_api', path='', _external=True)[:-1] }}</tt></p>
 
             <p>Each path segment beyond the API root requests an additional
             random word by word class. The following classes are supported.
@@ -69,7 +70,7 @@
             </ul>
 
             <p>Return values are JSON objects with a single key
-            <i>slugline</i>.  The <i>slugline</i> value is a list of objects
+            <i>slugline</i>. The <i>slugline</i> value is a list of objects
             for each word in the slug line. These objects have two keys,
             <i>class</i> and <i>word</i> for the word class and chosen word
             respectively.</p>
@@ -89,7 +90,7 @@
 
             <p>The sluglines generated for the main page are a verb followed by a
             noun. This is equivalent to requesting
-            <tt>http://twoslug.aaroniles.net/api/verb/noun</tt></p>
+            <tt>{{ url_for('twoslug_api', path='verb/noun', _external=True)[:-1] }}</tt></p>
         </div>
     </div>
 </div>
