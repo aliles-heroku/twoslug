@@ -28,12 +28,19 @@
     <div class="row">
         <div class="span12">
             <div class="page-header">
-                <h1>{{wordoid}}</h1>
+                <a href="https://www.namesilo.com/domain_results.php?domain_search={{wordoid}}{{ '&rid='+config.AFFILIATE_ID if config.AFFILIATE_ID is defined else ''}}">
+                    <h1>{{wordoid}}</h1>
+                </a>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="span12">
+            <p>
+                <a href="https://www.namesilo.com/domain_results.php?domain_search={{wordoid}}{{ '&rid='+config.AFFILIATE_ID if config.AFFILIATE_ID is defined else ''}}">
+                    <small>Register {{wordoid}} on namesilo</small>
+                </a>
+            </p>
             <p class="lead">For each request a different, random,
             <a href="https://en.wiktionary.org/wiki/wordoid">wordoid</a> is
             generated. The wordoids are generated from a
