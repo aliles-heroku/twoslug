@@ -7,8 +7,8 @@ from flask import abort, jsonify, redirect, render_template, request, url_for
 from werkzeug.contrib.atom import AtomFeed
 
 from twoslug import app
-from twoslug import duckduckgo
 from twoslug.model import wordnet
+from twoslug.utils import duckduckgo
 
 def twoslug_page(verb, noun):
     words = [
