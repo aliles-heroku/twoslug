@@ -8,7 +8,7 @@ from werkzeug.contrib.atom import AtomFeed
 
 from twoslug import app
 from twoslug.model import wordnet
-from twoslug.utils import duckduckgo
+from twoslug.utils import duckduckgo, schedule
 
 def twoslug_page(verb, noun):
     words = [
@@ -55,9 +55,8 @@ def twoslug_api(path):
 
 @app.route('/feeds/atom.xml', subdomain='twoslug')
 def twoslug_atom():
-    now = datetime.datetime.utcnow()
-    today = datetime.datetime(now.year, now.month, now.day, 12 * (now.hour // 12))
-    seed = calendar.timegm(today.timetuple())
+    released = schedule.regular()
+    seed = calendar.timegm(released.timetuple())
     link = url_for('twoslug_slugline', seed=seed, _external=True)
     chooser = random.Random(seed)
     verb = wordnet.get_verb(chooser=chooser).capitalize()
@@ -66,7 +65,7 @@ def twoslug_atom():
     feed = AtomFeed('TwoSlug Today', feed_url=request.url, url=request.url_root)
     feed.add(title=slugline, title_type='text',
             content=slugline, content_type='text',
-            published=today, updated=today,
+            published=released, updated=released,
             id=link, url=link,
             author='TwoSlug')
     return feed.get_response()

@@ -3,6 +3,17 @@ import datetime
 import random
 
 
+def regular(width=12, offset=0, now=None):
+    assert 24 % width  == 0
+    now = datetime.datetime.utcnow() if now is None else now
+    date = now.date() + datetime.timedelta(days=1)
+    released = datetime.datetime.fromordinal(date.toordinal())
+    released = released + datetime.timedelta(hours=offset)
+    while released > now:
+        released = released - datetime.timedelta(hours=width)
+    return released
+
+
 def irregular(now=None):
     now = datetime.datetime.utcnow() if now is None else now
     date = now.date()

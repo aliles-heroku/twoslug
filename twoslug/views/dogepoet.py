@@ -8,6 +8,7 @@ from werkzeug.contrib.atom import AtomFeed
 
 from twoslug import app
 from twoslug.model import doge
+from twoslug.utils import schedule
 
 def doge_page(first, second, last):
     poem = [
@@ -60,9 +61,8 @@ def doge_api(path):
 
 @app.route('/feeds/atom.xml', subdomain='dogepoet')
 def doge_atom():
-    now = datetime.datetime.utcnow()
-    today = datetime.datetime(now.year, now.month, now.day, 12 * (now.hour // 12) + 6)
-    seed = calendar.timegm(today.timetuple())
+    released = schedule.regular(offset=6)
+    seed = calendar.timegm(released.timetuple())
     link = url_for('doge_poem', seed=seed, _external=True)
     chooser = random.Random(seed)
     first = doge.get_verse(chooser=chooser)
@@ -73,7 +73,7 @@ def doge_atom():
     feed = AtomFeed('DogPoet Poetry', feed_url=request.url, url=request.url_root)
     feed.add(title=poetry, title_type='text',
             content=poetry, content_type='text',
-            published=today, updated=today,
+            published=released, updated=released,
             id=link, url=link,
             author='DogePoet')
     return feed.get_response()
