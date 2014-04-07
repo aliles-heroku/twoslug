@@ -8,6 +8,7 @@ from werkzeug.contrib.atom import AtomFeed
 
 from twoslug import app
 from twoslug.model import markov
+from twoslug.utils import schedule
 
 def get_length(request, default=8):
     try:
@@ -43,9 +44,8 @@ def wordinator_api(path):
 
 @app.route('/feeds/atom.xml', subdomain='wordinator')
 def wordinator_atom():
-    now = datetime.datetime.utcnow()
-    today = datetime.datetime(now.year, now.month, now.day, 12 * (now.hour // 12) + 6)
-    seed = calendar.timegm(today.timetuple())
+    released = schedule.irregular()
+    seed = calendar.timegm(released.timetuple())
     link = url_for('wordinator_wordoid', seed=seed, _external=True)
     chooser = random.Random(seed)
     length = get_length(request, chooser.randint(5,10))
@@ -53,7 +53,7 @@ def wordinator_atom():
     feed = AtomFeed('Wordinator', feed_url=request.url, url=request.url_root)
     feed.add(title=wordoid, title_type='text',
             content=wordoid, content_type='text',
-            published=today, updated=today,
+            published=released, updated=released,
             id=link, url=link,
             author='Wordinator')
     return feed.get_response()
