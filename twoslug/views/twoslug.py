@@ -11,7 +11,7 @@ from twoslug.model import wordnet
 from twoslug.utils import duckduckgo, schedule
 
 def get_chooser():
-    chooser = None
+    chooser = random
     for param, base in (('oct', 8), ('seed', 10), ('int', 10), ('hex', 16), ('hash', 16)):
         value = request.args.get(param, None)
         if value is not None:
