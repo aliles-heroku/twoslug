@@ -51,7 +51,12 @@
             definition sources are attributed within definition popups.</p>
 
             <p>A url parameter of <tt>?mode=alliteration</tt> will make
-            TwoSlug generate slug lines that begin with the same character.</p>
+            TwoSlug generate slug lines that begin with the same character.
+            Further, url parameters can be used to provide seed values to
+            the random number generator. Parameters of <tt>oct</tt>,
+            <tt>int</tt>, <tt>hex</tt> will set the seed from a value in base
+            8, 10 and 16. The parameters <tt>seed</tt> and <tt>hash</tt> are
+            synonyms for <tt>int</tt> and <tt>hex</tt> respectively.</p>
 
             <p>TwoSlug also has an API for requesting your own random slug
             lines. The API root is:</p>
