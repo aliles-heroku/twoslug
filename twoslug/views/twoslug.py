@@ -10,6 +10,14 @@ from twoslug import app
 from twoslug.model import wordnet
 from twoslug.utils import duckduckgo, schedule
 
+def get_chooser():
+    chooser = None
+    for param, base in (('oct', 8), ('seed', 10), ('int', 10), ('hex', 16), ('hash', 16)):
+        value = request.args.get(param, None)
+        if value is not None:
+            chooser = random.Random(int(value, base))
+    return chooser
+
 def twoslug_page(verb, noun):
     words = [
             ('verb', verb, duckduckgo.define(verb)),
@@ -22,28 +30,29 @@ def twoslug_page(verb, noun):
             title=slugline,
             words=words)
 
-
 @app.route('/', subdomain='twoslug')
 def twoslug_index():
-    verb = wordnet.get_verb()
+    chooser = get_chooser()
+    verb = wordnet.get_verb(chooser=chooser)
     mode = request.args.get('mode', None)
     if mode == 'alliteration':
       filter_fn = lambda item: item.startswith(verb[0])
     else:
       filter_fn = None
-    noun = wordnet.get_noun(filter_fn)
+    noun = wordnet.get_noun(filter_fn, chooser=chooser)
     return twoslug_page(verb, noun)
 
 @app.route('/api/<path:path>/', subdomain='twoslug')
 def twoslug_api(path):
     words = []
+    chooser = get_chooser()
     mode = request.args.get('mode', None)
     filter_fn = None
     for category in path.split('/'):
         try:
             word = {
                     'class': category,
-                    'word': wordnet.get_word(category, filter_fn)
+                    'word': wordnet.get_word(category, filter_fn, chooser=chooser)
             }
             if mode == 'alliteration' and filter_fn is None:
                 filter_char = word['word'][0]
@@ -70,6 +79,9 @@ def twoslug_atom():
             author='TwoSlug')
     return feed.get_response()
 
+@app.route('/slugline/hex/<hex:seed>', subdomain='twoslug')
+@app.route('/slugline/int/<int:seed>', subdomain='twoslug')
+@app.route('/slugline/oct/<oct:seed>', subdomain='twoslug')
 @app.route('/slugline/<int:seed>', subdomain='twoslug')
 def twoslug_slugline(seed):
     chooser = random.Random(seed)
